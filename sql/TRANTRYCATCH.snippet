@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>  
+<CodeSnippets  xmlns="https://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">  
+<_locDefinition xmlns="urn:locstudio">  
+    <_locDefault _loc="locNone" />  
+    <_locTag _loc="locData">Title</_locTag>  
+    <_locTag _loc="locData">Description</_locTag>  
+    <_locTag _loc="locData">Ciaran </_locTag>  
+    <_locTag _loc="locData">ToolTip</_locTag>  
+   <_locTag _loc="locData">Default</_locTag>  
+</_locDefinition>  
+<CodeSnippet Format="1.0.0">  
+<Header>  
+<Title>TranTryCatch</Title>  
+                        <Shortcut></Shortcut>  
+<Description>Try-Catch with transaction.</Description>  
+<Author>Me</Author>  
+<SnippetTypes>  
+                                <SnippetType>SurroundsWith</SnippetType>  
+</SnippetTypes>  
+</Header>  
+<Snippet>  
+<Declarations>  
+                                <Literal>  
+                                <ID>CatchCode</ID>  
+                                <ToolTip>Code to handle the caught error</ToolTip>  
+                                <Default>CatchCode</Default>  
+                                </Literal>  
+</Declarations>  
+<Code Language="SQL"><![CDATA[  
+BEGIN TRY  
+BEGIN TRANSACTION
+
+$selected$ $end$  
+
+
+--COMMIT
+
+END TRY  
+BEGIN CATCH  
+
+-- Whoops, there was an error
+  IF @@TRANCOUNT > 0
+     ROLLBACK
+
+  -- Raise an error with the details of the exception
+  DECLARE @ErrMsg nvarchar(4000), @ErrSeverity int
+  SELECT @ErrMsg = ERROR_MESSAGE(),
+         @ErrSeverity = ERROR_SEVERITY()
+
+  RAISERROR(@ErrMsg, @ErrSeverity, 1)
+
+END CATCH;  
+]]>  
+</Code>  
+</Snippet>  
+</CodeSnippet>  
+</CodeSnippets>  
